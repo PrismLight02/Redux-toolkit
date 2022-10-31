@@ -1,23 +1,36 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-
+import ProfileCard from "./component/ProfileCard"
+import UserForm from "./component/UserForm"
+import Counter from "./component/Counter"
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllPosts } from './store/fetch/getPosts';
+import {setLoading} from "./store/fetch/getPosts"
 function App() {
+
+  const dispatch =useDispatch()
+  const post = useSelector(state=>state.post)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <ProfileCard/>
+      <UserForm/>
+      <Counter/>
+      <div>
+      <h1>Fetching data using AsyncThunk !</h1>
+      <button onClick={()=>{
+        dispatch(setLoading(true))
+        dispatch(fetchAllPosts())}}
         >
-          Learn React
-        </a>
-      </header>
+          Click me to fetch!</button>
+      {post.loading &&(<p>Loading posts....</p>)}
+      <div>
+      {post.posts.map((p)=>(<div key={p.id}>
+        <p>{p.title}</p>
+        <p>{p.id}</p>
+        </div>
+      ))}
+      </div>
+      </div>  
     </div>
   );
 }
